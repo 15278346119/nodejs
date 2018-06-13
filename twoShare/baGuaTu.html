@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		#cv{
+			position: absolute;
+			border: 1px solid blue;
+			margin-top: 200px;
+			margin-left: 200px;
+		}
+		#cvLove{
+			position: absolute;
+			border: 1px solid blue;
+			margin-left: 900px;
+			margin-top: 200px;
+		}
+		
+	</style>
+</head>
+<body>
+	<canvas id="cv" width="600" height="600"></canvas>
+	<canvas id="cvLove" width="600" height="600"></canvas>
+	<script type="text/javascript">
+		var cv = document.getElementById("cv");
+		var cv1 = document.getElementById("cvLove");
+		var cxt = cv.getContext('2d');
+		var cxt1 = cv1.getContext('2d');
+
+		//八卦图
+		cxt.strokeStyle = "black";
+		cxt.lineWidth = 1;
+		cxt.beginPath();
+		cxt.arc(300,300,200,0,2*Math.PI);
+		cxt.stroke();
+		cxt.closePath();
+
+		cxt.lineWidth = 0.1;
+
+		cxt.beginPath();
+		cxt.arc(300,300,200,0.5*Math.PI,1.5*Math.PI);
+		// cxt.stroke();
+		cxt.fillStyle = "black";
+		cxt.fill();
+		cxt.closePath();
+
+		cxt.beginPath();
+		cxt.arc(300,200,100,0,2*Math.PI);
+		// cxt.stroke();
+		cxt.fillStyle = "black";
+		cxt.fill();
+		cxt.closePath();
+
+		cxt.beginPath();
+		cxt.arc(300,200,30,0,2*Math.PI);
+		// cxt.stroke();
+		cxt.fillStyle = "white";
+		cxt.fill();
+		cxt.closePath();
+
+		cxt.beginPath();
+		cxt.arc(300,400,100,0,2*Math.PI);
+		// cxt.stroke();
+		cxt.fillStyle = "white";
+		cxt.fill();
+		cxt.closePath();
+
+		cxt.beginPath();
+		cxt.arc(300,400,30,0,2*Math.PI);
+		// cxt.stroke();
+		cxt.fillStyle = "black";
+		cxt.fill();
+		cxt.closePath();
+		
+		//爱心
+		// cxt1.strokeStyle = "red";
+		// cxt1.lineWidth = 2;
+		// cxt1.beginPath();
+		// cxt1.moveTo(300,150);
+		// cxt1.quadraticCurveTo(0,0,300,400);
+		// cxt1.stroke();
+		// cxt1.closePath();
+
+		// cxt1.beginPath();
+		// cxt1.moveTo(300,150);
+		// cxt1.quadraticCurveTo(600,0,300,400);
+		// cxt1.stroke();
+		// cxt1.closePath();
+
+		cxt1.strokeStyle = "black";
+		cxt1.fillStyle = "red";
+		cxt1.lineWidth = 2;
+		cxt1.beginPath();
+		cxt1.moveTo(300,200);
+		cxt1.bezierCurveTo(0,0,150,420,300,500);
+		cxt1.fill();
+		// cxt1.stroke();
+		cxt1.closePath();
+
+		cxt1.beginPath();
+		cxt1.moveTo(300,200);
+		cxt1.bezierCurveTo(600,0,450,420,300,500);
+		cxt1.fill();
+		cxt1.stroke();
+		cxt1.closePath();
+		bezierCurveTo
+
+
+	</script>
+
+</body>
+</html>

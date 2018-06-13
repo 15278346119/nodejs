@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D轮播图</title>
+    <style>
+        .body{
+            width:520px;
+            height:280px;
+            margin:100px auto;
+            position: relative;
+            /*overflow: hidden;*/
+        }
+        .body .tb{
+            position: absolute;
+            width:520px;
+            height:280px;
+            transform-style:preserve-3d;
+            transform-origin: bottom;
+        }
+        .body .tb img{
+            width:520px;
+            height:280px;
+            position: absolute;
+            transform-style:preserve-3d;
+            transform-origin: bottom;
+        }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <div class="tb">
+            <img src="img/TB1.jpg">
+            <img src="img/TB2.jpg">
+            <img src="img/TB3.jpg">
+            <img src="img/TB4.jpg">
+            <img src="img/TB5.jpg">
+        </div>
+    </div>
+    <script src="jquery.js"></script>
+    <script>
+        let deg = 360/5, i=0;
+        $(`.body .tb img`).map(function(index){
+            $(this).css({transform:`rotateX(${deg*index}deg)`});
+        });
+        fn();
+        function fn(){
+            i = i+0.3;
+            $(`.body .tb`).animate({transform:`rotate3d(1,0,0,${-i}deg)`},{
+                step:function(now , fx){
+                    $(`.body .tb`).css({transform:`rotate3d(1,0,0,${-i}deg)`});
+                    fn();
+                },
+                duration:50
+            });
+        };
+
+        //***********执行不了********************
+
+       // fn();
+       // function fn(){
+       //     console.log("fn",i);
+       //     i = i+50;
+       //     $(`.body .tb`).animate({transform:`rotate3d(1,0,0,${-i}deg)`},2000,`linear`,function(){
+       //         console.log("inner",i);
+       //         fn();
+       //     });
+       // }
+        //*******************************
+
+        //修改上面的无效案例***********
+       // fn();
+       // function fn(){
+       //     i = i+5;
+       //     $(`.body .tb`).animate({transform:`rotate3d(1,0,0,${-i}deg)`},30,`linear`,function(){
+       //         $(`.body .tb`).css({transform:`rotate3d(1,0,0,${-i}deg)`});
+       //         fn();
+       //     });
+       // }
+        //**************************
+    </script>
+</body>
+</html>

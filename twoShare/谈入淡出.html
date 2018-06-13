@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>淡入淡出</title>
+    <style>
+        .body{
+            width:520px;
+            height:280px;
+            margin:100px auto;
+            position: relative;
+        }
+        .body .tb{
+            width:520px;
+            height:280px;
+        }
+        .body .tb img{
+            width:520px;
+            height:280px;
+            position: absolute;
+        }
+        .body .circle{
+            position: absolute;
+            bottom:10px;
+            left: 50%;
+            transform: translate(-60px);
+        }
+        .body .circle ul{
+            position: absolute;
+            width:120px;
+            height:12px;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: white;
+            bottom:0px;
+            list-style: none;
+        }
+        .body .circle ul>li{
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid black;
+            float: left;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .backg{
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <div class="tb">
+            <img src="img/TB1.jpg">
+            <img src="img/TB2.jpg">
+            <img src="img/TB3.jpg">
+            <img src="img/TB4.jpg">
+            <img src="img/TB5.jpg">
+        </div>
+        <div class="circle">
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="jquery.js"></script>
+    <script>
+        $(document).ready(function(){
+            let index = 0,
+                $circle = $(`.circle ul>li`),
+                $img = $(`.tb img`);
+            $(`.tb img:not(:first)`).fadeOut(0);
+            outFn($img.eq(0),0);
+            function outFn(obj, _index){
+                $circle.eq(_index).addClass(`backg`).siblings().removeClass(`backg`);
+                index = _index;
+                obj.fadeOut(2000);
+                obj.next().fadeIn(2000,function(){
+                    if($(this).index() < ($img.length-1)){
+                        outFn($(this),$(this).index());
+                    }else{
+                        $circle.eq($(this).index()).addClass(`backg`).siblings().removeClass(`backg`);
+                        index = $(this).index();
+                        $(this).fadeOut(2000);
+                        $img.eq(0).fadeIn(2000,function(){
+                            outFn($img.eq(0),0);
+                        });
+                    }
+                });
+            };
+            $circle.on(`click`,function(){
+                console.log($(this).index());
+                $img.stop();
+                index = $(this).index();
+                $img.eq(index).fadeIn(0).siblings().fadeOut(0);
+                $(this).addClass(`backg`).siblings().removeClass(`backg`);
+                if(index === $img.length-1){
+                    $img.eq(index).fadeOut(2000);
+                    $img.eq(0).fadeIn(2000,function(){
+                        outFn($img.eq(0),0);
+                    });
+                }else{
+                    outFn($img.eq(index),index);
+                }
+            });
+            $img.hover(function(){
+                $img.stop();
+                $img.eq(index).fadeIn(1000).siblings().fadeOut(1000);
+            }, function () {
+                $circle.eq(index).trigger(`click`);
+            });
+        });
+    </script>
+</body>
+</html>

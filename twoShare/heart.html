@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <style>
+        .heart{
+            position: absolute;
+            margin-left: 100px;
+            width: 520px;
+            height:760px;
+            border:0px ;
+            /*border:1px solid black;*/
+        }
+
+        .heart .box{
+            position: absolute;
+            width: 520px;
+            height:760px;
+            overflow: hidden;
+            border:0px ;
+            transform-origin: right;
+        }
+
+        .heart .box .div1{
+            position: relative;
+            width: 520px;
+            height:760px;
+            border:1px solid red;
+            background-color: red;
+            border-radius: 50% 50% 50% 40%;
+            transform: rotate(-40deg);
+            left:180px;
+        }
+
+        @keyframes self{
+            from{
+                transform: scale(1,1);
+            }
+
+            to{
+                transform: scale(0.9,0.9);
+            }
+        }
+
+        .action{
+            animation: self 0.6s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="heart">
+        <div class="box">
+            <div class="div1"></div>
+        </div>
+    </div>
+    <script src="jquery.js"></script>
+    <script>
+        $(`.box`).after($(`.box`).clone());
+        $(`.box`).eq(1).css({transform:`rotateY(180deg)`});
+
+        $(`.box`).eq(0).css({left:`+=0.5`});  //处理心跳出现的白色空隙问题。
+
+        $(`.heart`).addClass(`action`);
+    </script>
+</body>
+</html>

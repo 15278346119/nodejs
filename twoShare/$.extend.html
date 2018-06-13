@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul>
+        <li>111</li>
+        <li>222</li>
+        <li>333</li>
+        <li>444</li>
+        <li>555</li>
+    </ul>
+    <br>
+    <script src="jquery.js"></script>
+    <script>
+        (function($){
+            /*函数合并*/
+//            let obj1 = {a:1,b:2},obj2 = {b:3,c:4};
+//            let obj3 = $.extend({},obj1,obj2);  //a:1,b:3,c:4
+//            console.log(obj3);
+
+//            let obj1 = {a:1,b:2,d:{ m:5,n:6}},obj2 = {b:3,c:4,d:{m:7,j:8}};
+//            let obj3 = $.extend({},obj1,obj2);              //类似浅拷贝
+//            let obj4 = $.extend(true,{},obj1,obj2);         //第一个参数为 true 时，类似深拷贝
+//            console.log(obj3);  //a:1,b:3,c:4,d(m:7,j:8)
+//            console.log(obj4);  //a:1,b:3,c:4,d(m:7,n:6,j:8)
+
+            /*往$构造器上扩展函数*/
+//            $.extend({
+//                fn1(param = `没有打印内容`){
+//                    alert(param);
+//                    return this;    //该处的this 为jQuery对象，return 当前对象，以便进行链式操作。
+//                },
+//                fn2(){
+//                    alert(`调用了fn2()`);
+//                    return this;
+//                }
+//            });
+//            $.fn1().fn2();          // 先后弹出：没有打印内容、调用了fn2()
+
+            /*往$ 的实例对象上扩展函数*/
+           $.fn.extend({
+               bgColor(color1 = `skyblue`,color2 = `pink`,color3 = `orange`){  //隔行变色加鼠标移入高亮
+                   let self = this;
+                   self.change(color1,color2);
+                   this.hover(function(){
+                       $(this).css({backgroundColor:color3});
+                   },function(){
+                       self.change(color1,color2);
+                   });
+               },
+               change(color1 = `skyblue`,color2 = `pink`){     //只能隔行变色
+                   /*console.log(this.selector);   //返回当前选择器的字符串（"ul li"）*/
+                   $(`${this.selector}:even`).css({backgroundColor:color1});
+                   $(`${this.selector}:odd`).css({backgroundColor:color2});
+               }
+           });
+            // 实现隔行变色，鼠标移入高亮的扩展函数
+           // $(`ul li`).bgColor();
+           // $(`ul li`).bgColor(`blue`,`green`,`black`);
+           $(`ul li`).change();
+           // $(`ul li`).change(undefined,`red`);
+
+        })(jQuery);
+    </script>
+</body>
+</html>

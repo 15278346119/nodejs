@@ -1,0 +1,142 @@
+<!DOCTYPE html><!-- H5的标志 -->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+
+	</style>
+</head>
+<body>
+	<video id="video" controls>
+		<source src="./movie/mov_bbb.mp4" type="video/mp4">
+	</video>
+	<br>
+	<button id="startStop">播放/暂停</button>
+	<span id="playTime"></span>
+	<progress id="pro1" value="0" max="100"></progress>
+	<button id="muted">静音</button>
+	<progress id="pro2" value="50" max="100"></progress>
+
+	<script src="./jquery.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		let v = document.getElementById('video'),	//视频对象,（可用jQuery选择，但是用jQuery不能直接使用DOM方法)
+			stsp = $(`#startStop`),					//播放或暂停
+			playTime = $(`#playTime`),				//当前的播放时间
+			pro1 = $(`#pro1`),						//播放进度(不能用jQuery选择)
+			pro2 = $(`#pro2`),						//声音大小(不能用jQuery选择)
+			muted = $(`#muted`),					//是否静音
+			totalTime = 0,							//视频的总时长
+			boolSP = false,							//播放还是暂停
+			timer = null;							//播放时间更新的定时器
+
+		//播放或暂停 点击事件
+		stsp.on("click",function(){
+			boolSP = !boolSP;
+			if(boolSP){
+				timer = setInterval(timeUpdate,30);
+				v.play();
+			}else{
+				clearInterval(timer);
+				v.pause();
+			}
+		});
+
+		//静音 点击事件
+		muted.on(`click`,function(){
+			let bool = v.muted ;
+			v.muted = !bool ;
+			if(bool){
+				pro2.val(50);
+			}else{
+				pro2.val(0);
+			}
+		});
+
+		//播放时间显示处理函数
+		function handleTime(time){
+			let minutes = `0${Math.trunc(time/60)}`.slice(-2) ;
+			let seconds = `0${time - Math.trunc(time/60)*60}`.slice(-2);
+			return `${minutes}:${seconds}`;
+		};
+		v.oncanplay = function(){
+			totalTime = Math.trunc(v.duration);
+			//获取时间，显示到span标签上。(初始)
+			playTime.html(`${handleTime(Math.trunc(v.currentTime))}/${handleTime(totalTime)}`);	
+		};
+		function timeUpdate(){
+			let currentT = Math.trunc(v.currentTime);
+			//获取当前时间，显示到span标签上。
+			playTime.html(`${handleTime(currentT)}/${handleTime(totalTime)}`);
+			//进度条跟进显示
+			pro1.val(Math.trunc(v.currentTime/v.duration*100)+1);
+		};
+
+		//播放进度条拖动事件
+		pro1.hover(function(){
+			pro1.on(`mousedown`,function(event){
+				let width = pro1.width()-1,wid;
+				pro(event,width);
+				v.pause();
+				pro1.on(`mousemove`,function(event){
+					pro(event,width);
+				});
+			});
+		},function(){
+			pro1.off(`mousemove`);
+			if(boolSP)
+				v.play();
+		});
+		pro1.on(`mouseup`,function(){
+			pro1.off(`mousemove`);
+			if(boolSP)
+				v.play();
+		});
+		function pro(event,width){
+			let wid = event.clientX - Math.trunc(pro1.position().left);
+			pro1.val(Math.trunc(wid/width*100));
+			v.currentTime = totalTime*pro1.val()/100;
+			playTime.html(`${handleTime(Math.trunc(v.currentTime))}/${handleTime(totalTime)}`);
+		};
+
+		//声音进度条拖动事件
+		pro2.hover(function(){
+			pro2.on(`mousedown`,function(){
+				let width = pro2.width()-1,wid;
+				wid = event.clientX - Math.trunc(pro2.position().left);
+				pro2.val(Math.trunc(wid/width*100));
+				pro2.on(`mousemove`,function(event){
+					wid = event.clientX - Math.trunc(pro2.position().left);
+					pro2.val(Math.trunc(wid/width*100));
+					if(pro2.val() === 0){
+						v.muted = true;
+					}else{
+						v.muted = false;
+						v.volume = wid/width;	//声音的大小控制
+					}
+				});
+				if(pro2.val() === 0){
+					v.muted = true;
+				}else{
+					v.muted = false;
+					v.volume = wid/width;
+				}
+			});
+		},function(){
+			pro2.off(`mousemove`);
+		});
+		pro2.on(`mouseup`,function(){
+			pro2.off(`mousemove`);
+		});
+
+
+		//播放结束事件
+		v.onended = function(){
+			boolSP = false;
+			clearInterval(timer);
+		};
+
+	</script>
+
+</body>
+</html>

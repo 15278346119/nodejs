@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <style>
+        .body{
+            width:520px;
+            height:280px;
+            margin:100px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .body .tb{
+            width:520px;
+            height:280px;
+        }
+        .body .tb img{
+            width:520px;
+            height:280px;
+            position: absolute;
+            left:520px;
+        }
+        .body .tb img:first-child{
+            left:0px;
+        }
+        .body .circle{
+            position: absolute;
+            bottom:10px;
+            left: 50%;
+            transform: translate(-60px);
+        }
+        .body .circle ul{
+            position: absolute;
+            width:120px;
+            height:12px;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: white;
+            bottom:0px;
+            list-style: none;
+        }
+        .body .circle ul>li{
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid black;
+            float: left;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .backg{
+            background-color: orange;
+        }
+        .body a{
+            position: absolute;
+            display: block;
+            text-decoration: none;
+            transform: scale(2,4);
+            top:45%;
+            display: none;
+        }
+        .body a:last-child{
+            right: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <div class="tb">
+            <img src="img/TB1.jpg">
+            <img src="img/TB2.jpg">
+            <img src="img/TB3.jpg">
+            <img src="img/TB4.jpg">
+            <img src="img/TB5.jpg">
+        </div>
+        <div class="circle">
+            <ul>
+                <li class="backg"></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+        <a href="#">&lt;</a>
+        <a href="#">&gt;</a>
+    </div>
+    <script src="jquery.js"></script>
+    <script>
+        $(document).ready(function(){
+            let $circles = $(`.circle ul>li`),//小圆点
+                $imgs = $(`.tb img`),
+                $arrows = $(`.body a`),//左右箭头
+                index = 0,
+                bool = true;
+            $imgs.eq(0).animate({left:-520},2000,`linear`).animate({left:520},0,`linear`);
+            animateFn($imgs, 1);
+            function animateFn(obj, _index){
+                obj.eq(_index).animate({left:0},2000,`linear`,function(){
+                    $circles.eq(_index).addClass(`backg`).siblings().removeClass(`backg`);
+                    index = _index;
+                    if(_index === ($imgs.length-1)){
+                        _index = -1;
+                    }
+                    animateFn(obj, _index+1);
+                }).animate({left:-520},2000,`linear`).animate({left:520},0,`linear`);
+            }
+            $circles.on(`click`,function(){
+                $(this).addClass(`backg`).siblings().removeClass(`backg`);
+                index = $(this).index();
+                $imgs.stop(true);
+                $imgs.eq(index).css({left:0}).siblings().css({left:520});
+                $imgs.eq(index).animate({left:-520},2000,`linear`).animate({left:520},0,`linear`);
+                if(index === ($imgs.length-1))index = -1;
+                animateFn($imgs, index+1);
+            });
+
+            //左箭头
+            $arrows.eq(0).on(`click`,function(){
+                $imgs.stop(true);
+                $imgs.eq(index).siblings().css({left:520});
+                $imgs.eq(index).animate({left:-520}).animate({left:520},0,`linear`);
+                if(index === ($imgs.length-1))index = -1;
+                $imgs.eq(index+1).animate({left:0});
+                $circles.eq(index+1).addClass(`backg`).siblings().removeClass(`backg`);
+                index++;
+            });
+            //右箭头
+            $arrows.eq(1).on(`click`,function(){
+                $imgs.stop(true);
+                $imgs.eq(index).siblings().css({left:-520});
+                $imgs.eq(index).animate({left:520}).animate({left:-520},0,`linear`);
+                if(index === 0)index = $imgs.length;
+                $imgs.eq(index-1).animate({left:0});
+                $circles.eq(index-1).addClass(`backg`).siblings().removeClass(`backg`);
+                index--;
+            });
+            //隐藏显示的
+            $(`.body .tb`).hover(function(){
+                overFn();
+            },function(){
+                $circles.eq(index).trigger(`click`);
+            });
+            function overFn(){
+                $imgs.stop(true);
+                $arrows.show();
+                if($imgs.eq(index).position().left < 0){
+                    $imgs.eq(index).animate({left:-520});
+                    if(index === ($imgs.length-1))index = -1;
+                    $imgs.eq(index+1).animate({left:0});
+                    $circles.eq(index+1).addClass(`backg`).siblings().removeClass(`backg`);
+                    index++;
+                }
+            }
+            $arrows.hover(function(){
+                overFn();
+            },function(){
+//                $arrows.hide();
+                $circles.eq(index).trigger(`click`);
+            });
+        });
+    </script>
+</body>
+</html>
